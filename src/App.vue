@@ -1,21 +1,27 @@
 <template>
-  <div id="app">
-    <component :is="layout">
-      <router-view />
-    </component>
-  </div>
+  <component :is="layout">
+    <Header />
+    <router-view />
+  </component>
 </template>
 <script>
-  const DEFAULT_LAYOUT = "layout-default";
+import LayoutDefault from "./layout/LayoutDefault.vue";
+import Header from "./components/Header.vue"
 
-  export default {
-    name: 'app',
-    components: {},
-    computed: {
-      layout () {
-        return this.$route.meta.layout || DEFAULT_LAYOUT;
-      }
-    }
-  }
+export default {
+  name: "app",
+  components: {
+    Header
+  },
+  computed: {
+    layout() {
+      return this.$route.meta.layout || LayoutDefault;
+    },
+  },
+};
 </script>
+
+<style lang="scss">
+@import "assets/sass/app.scss"
+</style>
 

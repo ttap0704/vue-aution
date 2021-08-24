@@ -3,8 +3,8 @@ import { createRouter, createWebHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    name: "Index",
-    meta: { layout: 'layout-default'},
+    name: "index",
+    meta: { layout: 'LayoutDefault'},
     component: () => import('@/views/Index'),
   },
 ];
