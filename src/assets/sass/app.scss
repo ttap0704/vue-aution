@@ -1,13 +1,18 @@
+@import "./main.scss";
+@import "./components.scss";
+
 #app {
   width: 500px;
-  height: 1000px;
+  height: 100vh;
   margin: 0 auto;
+  font-size: 14px;
 }
 
 
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 ul, ol, li {

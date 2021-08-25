@@ -1,16 +1,25 @@
 <template>
   <div class="header">
     <ul>
-      <li><a href="#">경매</a></li>
-      <li><a href="#">커뮤니티</a></li>
-      <li><a href="#">로그인</a></li>
+      <li>
+        <router-link to="/auction">경매</router-link>
+      </li>
+      <li><router-link to="/comunity">커뮤니티</router-link></li>
+      <li><router-link to="/login">로그인</router-link></li>
     </ul>
   </div>
 </template>
 <script>
 export default {
-  
-}
+  methods: {
+    movePage() {
+      console.log(this.$routes);
+    },
+  },
+  created() {
+    console.log(this.$route);
+  },
+};
 </script>
 <style lang="scss" scoped>
 .header {
@@ -32,6 +41,9 @@ ul {
     text-align: center;
     a {
       color: #fff;
+      &.active {
+        color: yellow;
+      }
     }
   }
 }
