@@ -7,7 +7,6 @@
 export default {
   components: {},
   created() {
-    console.log("layout");
   },
 };
 </script>

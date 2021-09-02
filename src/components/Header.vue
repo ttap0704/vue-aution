@@ -13,11 +13,9 @@
 export default {
   methods: {
     movePage() {
-      console.log(this.$routes);
     },
   },
   created() {
-    console.log(this.$route);
   },
 };
 </script>
