@@ -1,10 +1,26 @@
 <template>
   <div class="contents_container">
-    <h1 style="text-align: center; margin-bottom: 12px;">Vue Auction!</h1>
+    <h1 style="text-align: center; margin-bottom: 12px">Vue Auction!</h1>
     <form class="login_form" @submit="onSubmit($event)">
-      <input type="text" name="loginId" placeholder="아이디를 입력해주세요" v-model="loginId">
-      <input type="password" name="loginPwd" placeholder="비밀번호를 입력해주세요." v-model="loginPwd">
-      <input type="text" name="nick" v-model="nick" placeholder="닉네임을 입력해주세요." v-if="mode == 'join'">
+      <input
+        type="text"
+        name="loginId"
+        placeholder="아이디를 입력해주세요"
+        v-model="loginId"
+      />
+      <input
+        type="password"
+        name="loginPwd"
+        placeholder="비밀번호를 입력해주세요."
+        v-model="loginPwd"
+      />
+      <input
+        type="text"
+        name="nick"
+        v-model="nick"
+        placeholder="닉네임을 입력해주세요."
+        v-if="mode == 'join'"
+      />
       <button type="submit" class="cursor-p">
         {{ mode == "login" ? "로그인" : "회원가입" }}
       </button>
@@ -37,13 +53,36 @@ export default {
     },
     onSubmit(e) {
       const id = this.loginId;
-      const pwd = this.loginPwd
-      if (id.length == 0 || pwd.length ==0 ) {
-        alert('정보를 입력해주세요.')
+      const pwd = this.loginPwd;
+      if (id.length == 0 || pwd.length == 0) {
+        alert("정보를 입력해주세요.");
       }
-      e.preventDefault();
-      console.log(e)
-    }
+
+      if (this.mode == "login") {
+        this.loginUser(e);
+      }
+    },
+    loginUser(e) {
+      const login_data = {
+        email: this.loginId,
+        password: this.loginPwd,
+      };
+      this.$axios
+        .post(`${this.$host}/users/login`, login_data)
+        .then((res) => {
+          const data = res.data.user_data;
+
+          if (data.pass == true) {
+            alert('환영합니다.')
+          } else {
+            alert('로그인 실패.')
+            e.preventDefault();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 };
 </script>
