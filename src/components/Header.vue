@@ -5,12 +5,18 @@
         <router-link to="/auction">경매</router-link>
       </li>
       <li><router-link to="/comunity">커뮤니티</router-link></li>
-      <li><router-link to="/login">로그인</router-link></li>
+      <li v-if="!loginPass"><router-link to="/login" >로그인</router-link></li>
+      <li v-else-if="loginPass"><router-link to="/info" >내 정보</router-link></li>
     </ul>
   </div>
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
+  computed: {
+    ...mapGetters("Login", ["loginPass"])
+  },
   methods: {
     movePage() {
     },

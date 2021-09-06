@@ -1,25 +1,35 @@
 <template>
   <div class="contents_container">
-    <div class="com_list b-b-e3e3e3" v-for="(item, index) in com_list" :key="index">
-      <h3> {{ item.contents }} </h3>
-      <small style="text-align: right">{{ item.nick }} <br> {{ item.post_date }}</small>
+    <div class="util_box">
+      <button>글 작성</button>
+    </div>
+    <div
+      class="com_list b-b-e3e3e3"
+      v-for="(item, index) in com_list"
+      :key="index"
+    >
+      <h3>{{ item.contents }}</h3>
+      <small style="text-align: right"
+        >{{ item.nick }} <br />
+        {{ item.post_date }}</small
+      >
     </div>
   </div>
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       com_list: [
         {
-          contents: '조이입니다.',
-          nick: '조이',
-          post_date: '2021. 08. 25'
-        }
-      ]
-    }
-  }
-}
+          contents: "조이입니다.",
+          nick: "조이",
+          post_date: "2021. 08. 25",
+        },
+      ],
+    };
+  },
+};
 </script>
 <style lang="scss" scoped>
 .com_list {
@@ -28,5 +38,20 @@ export default {
   justify-content: space-around;
   height: 60px;
   padding: 0 10px;
+}
+
+.util_box {
+  width: 100%;
+  height: 50px;
+  margin-bottom: 20px;
+  button {
+    width: 75px;
+    height: 25px;
+    background-color: #34495e;
+    border-color: #34495e;
+    color: #fff;
+    float: right;
+    cursor: pointer;
+  }
 }
 </style>

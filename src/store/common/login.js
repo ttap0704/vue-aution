@@ -11,7 +11,7 @@ const getters = {
 const mutations = {
   SET_PASS (state, payload) {
     if (payload) {
-      state.loginPass = payload;
+      state.pass = payload;
     }
   }
 }
@@ -24,8 +24,9 @@ const actions = {
 
 
 export default {
+  namespaced: true,
   state,
   getters,
   mutations,
-  actions
+  actions,
 };

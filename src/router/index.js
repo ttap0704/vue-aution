@@ -28,6 +28,13 @@ const routes = [
     component: () => import("@/views/Login"),
     kor_name: "로그인"
   },
+  {
+    name: "info",
+    path: "/info",
+    meta: { layout: "LayoutDefault" },
+    component: () => import("@/views/Info"),
+    kor_name: "내 정보"
+  },
 ];
 
 const router = createRouter({

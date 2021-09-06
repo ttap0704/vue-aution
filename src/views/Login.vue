@@ -1,7 +1,14 @@
 <template>
   <div class="contents_container">
     <h1 style="text-align: center; margin-bottom: 12px">Vue Auction!</h1>
-    <form class="login_form" @submit="onSubmit($event)">
+    <form class="login_form" @submit.prevent.stop="onSubmit($event)">
+      <input
+        type="text"
+        name="name"
+        placeholder="이름를 입력해주세요"
+        v-model="name"
+        v-if="mode == 'join'"
+      />
       <input
         type="text"
         name="loginId"
@@ -34,16 +41,24 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   data() {
     return {
       mode: "login",
+      name: "",
       loginId: "",
       loginPwd: "",
       nick: "",
     };
   },
+  computed: {
+    ...mapGetters("Login", ["loginPass"]),
+  },
   methods: {
+    ...mapActions("Login", ["setLoginPass"]),
+    ...mapActions("User", ["setUserInfo"]),
     changeMode() {
       if (this.mode == "login") {
         this.mode = "join";
@@ -51,18 +66,27 @@ export default {
         this.mode = "login";
       }
     },
-    onSubmit(e) {
+    onSubmit() {
       const id = this.loginId;
       const pwd = this.loginPwd;
+      const name = this.name;
+      const nick = this.nick;
+
       if (id.length == 0 || pwd.length == 0) {
         alert("정보를 입력해주세요.");
       }
 
       if (this.mode == "login") {
-        this.loginUser(e);
+        this.loginUser();
+      } else if (this.mode == "join") {
+        if (name.length == 0 || nick.length == 0) {
+          alert("정보를 입력해주세요.");
+        } else {
+          this.createUser();
+        }
       }
     },
-    loginUser(e) {
+    loginUser() {
       const login_data = {
         email: this.loginId,
         password: this.loginPwd,
@@ -72,16 +96,55 @@ export default {
         .then((res) => {
           const data = res.data.user_data;
 
+          console.log(data)
+
           if (data.pass == true) {
-            alert('환영합니다.')
+            const sendUserData = {
+              cid: data.id,
+              name: data.name,
+              nick: data.nick,
+            };
+
+            alert("환영합니다.");
+            this.setLoginPass();
+            this.setUserInfo(sendUserData);
+            this.$router.push({ name: "info" });
           } else {
-            alert('로그인 실패.')
-            e.preventDefault();
+            alert("로그인 실패.");
           }
         })
         .catch((error) => {
           console.log(error);
         });
+    },
+    createUser() {
+      const user_data = {
+        name: this.name,
+        email: this.loginId,
+        password: this.loginPwd,
+        nick: this.nick,
+      };
+
+      this.$axios
+        .post(`${this.$host}/users/join`, user_data)
+        .then((res) => {
+          const user_id = res.data.user_id;
+
+          if (user_id >= 0) {
+            alert("환영합니다. 로그인 해주세요.");
+            this.clearInputs();
+            this.mode = "loign";
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    clearInputs() {
+      this.loginId = "";
+      this.loginPwd = "";
+      this.name = "";
+      this.nick = "";
     },
   },
 };
