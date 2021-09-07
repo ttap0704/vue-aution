@@ -1,11 +1,13 @@
 <template>
   <div class="contents_container">
     <div class="util_box">
-      <button>글 작성</button>
+      <router-link to="/comunity/write">
+        <button>글 작성</button>
+      </router-link>
     </div>
     <div
-      class="com_list b-b-e3e3e3"
-      v-for="(item, index) in com_list"
+      class="posts b-b-e3e3e3"
+      v-for="(item, index) in posts"
       :key="index"
     >
       <h3>{{ item.contents }}</h3>
@@ -20,7 +22,7 @@
 export default {
   data() {
     return {
-      com_list: [
+      posts: [
         {
           contents: "조이입니다.",
           nick: "조이",
@@ -29,10 +31,13 @@ export default {
       ],
     };
   },
+  // created () {
+  //   this.$axios.get()
+  // }
 };
 </script>
 <style lang="scss" scoped>
-.com_list {
+.posts {
   display: flex;
   flex-direction: column;
   justify-content: space-around;

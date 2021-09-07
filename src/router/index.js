@@ -5,21 +5,35 @@ const routes = [
     name: "index",
     path: "/",
     meta: { layout: "LayoutDefault" },
-    component: () => import("@/views/Auction"),
+    component: () => import("@/views/Auction/Index"),
   },
   {
     name: "auction",
     path: "/auction",
     meta: { layout: "LayoutDefault" },
-    component: () => import("@/views/Auction"),
+    component: () => import("@/views/Auction/Index"),
     kor_name: "경매"
   },
   {
     name: "comunity",
     path: "/comunity",
     meta: { layout: "LayoutDefault" },
-    component: () => import("@/views/Comunity"),
-    kor_name: "커뮤니티"
+    component: () => import("@/views/Comunity/Index"),
+    kor_name: "커뮤니티",
+  },
+  {
+    name: "write",
+    path: "/comunity/write",
+    meta: { layout: "LayoutDefault" },
+    component: () => import("@/views/Comunity/Write"),
+    kor_name: "글 작성",
+  },
+  {
+    name: "comunity",
+    path: "/comunity",
+    meta: { layout: "LayoutDefault" },
+    component: () => import("@/views/Comunity/Index"),
+    kor_name: "커뮤니티",
   },
   {
     name: "login",

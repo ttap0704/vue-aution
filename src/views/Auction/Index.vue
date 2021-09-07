@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import List from "../components/List.vue";
+import List from "@/components/List.vue";
 
 export default {
   components: {
@@ -14,7 +14,11 @@ export default {
     this.$axios
       .get(`${this.$host}/`)
       .then((data) => {
-        console.log(data);
+        console.log(data.post_id > 0);
+
+        if (data.post_id > 0) {
+          this.$router.push({name: "comunity"})
+        }
       })
       .catch((error) => {
         console.error(error);
