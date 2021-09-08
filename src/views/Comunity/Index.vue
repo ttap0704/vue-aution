@@ -1,53 +1,71 @@
 <template>
-  <div class="contents_container">
+  <div class="contents_container" style="overflow-y: auto">
     <div class="util_box">
-      <router-link to="/comunity/write">
-        <button>글 작성</button>
-      </router-link>
+      <button @click="addPost">글 작성</button>
     </div>
-    <div
-      class="posts b-b-e3e3e3"
-      v-for="(item, index) in posts"
-      :key="index"
-    >
-      <h3>{{ item.contents }}</h3>
+    <div class="posts b-b-e3e3e3" v-for="(item, index) in posts" :key="index" @click="moveDetails(item.id)">
+      <div>
+        <h3>{{ item.title }}</h3>
+        <small>{{ item.content }}</small>
+      </div>
       <small style="text-align: right"
-        >{{ item.nick }} <br />
-        {{ item.post_date }}</small
+        >{{ item.unick }} <br />
+        {{ item.created_at }}</small
       >
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
-      posts: [
-        {
-          contents: "조이입니다.",
-          nick: "조이",
-          post_date: "2021. 08. 25",
-        },
-      ],
+      posts: [],
     };
   },
-  // created () {
-  //   this.$axios.get()
-  // }
+  computed: {
+    ...mapGetters("Login", ["loginPass"]),
+  },
+  methods: {
+    addPost() {
+      if (!this.loginPass) {
+        alert("로그인 해주세요.");
+        return false;
+      } else {
+        this.$router.push({ name: "write" });
+      }
+    },
+    moveDetails(pid) {
+      this.$router.push({name: "details", params: {pid}})
+    }
+  },
+  created() {
+    this.$axios
+      .get(`${this.$host}/comunity/post`)
+      .then((data) => {
+        console.log(data.data.posts);
+        this.posts = data.data.posts;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
 };
 </script>
 <style lang="scss" scoped>
 .posts {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  height: 60px;
+  justify-content: space-evenly;
+  height: 90px;
   padding: 0 10px;
+  cursor: pointer;
 }
 
 .util_box {
   width: 100%;
-  height: 50px;
+  height: 30px;
   margin-bottom: 20px;
   button {
     width: 75px;

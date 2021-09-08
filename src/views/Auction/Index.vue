@@ -14,11 +14,7 @@ export default {
     this.$axios
       .get(`${this.$host}/`)
       .then((data) => {
-        console.log(data.post_id > 0);
-
-        if (data.post_id > 0) {
-          this.$router.push({name: "comunity"})
-        }
+        console.log(data)
       })
       .catch((error) => {
         console.error(error);
