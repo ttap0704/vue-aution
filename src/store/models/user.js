@@ -1,7 +1,8 @@
 const state = () => ({
   cid: undefined,
   name: undefined,
-  nick: undefined
+  nick: undefined,
+  cash: undefined
 })
 
 const getters = {
@@ -9,7 +10,8 @@ const getters = {
     return {
       cid : state.cid,
       name: state.name,
-      nick: state.nick
+      nick: state.nick,
+      cash: state.cash
     }
   }
 }
@@ -19,6 +21,7 @@ const mutations = {
     state.cid = Number(data.cid);
     state.name = data.name;
     state.nick = data.nick;
+    state.cash = data.cash;
   }
 }
 

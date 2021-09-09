@@ -27,7 +27,7 @@ const routes = [
   },
   {
     name: "details",
-    path: "/comunity/details",
+    path: "/comunity/details/:pid",
     meta: { layout: "LayoutDefault" },
     component: () => import("@/views/Comunity/Details"),
   },
@@ -41,13 +41,19 @@ const routes = [
     name: "login",
     path: "/login",
     meta: { layout: "LayoutDefault" },
-    component: () => import("@/views/Login"),
+    component: () => import("@/views/User/Login"),
   },
   {
     name: "info",
     path: "/info",
     meta: { layout: "LayoutDefault" },
-    component: () => import("@/views/Info"),
+    component: () => import("@/views/User/Info"),
+  },
+  {
+    name: "cash",
+    path: "/cash",
+    meta: { layout: "LayoutDefault" },
+    component: () => import("@/views/User/Cash"),
   },
 ];
 

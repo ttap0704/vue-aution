@@ -6,7 +6,7 @@
     <div class="posts b-b-e3e3e3" v-for="(item, index) in posts" :key="index" @click="moveDetails(item.id)">
       <div>
         <h3>{{ item.title }}</h3>
-        <small>{{ item.content }}</small>
+        <small>{{ contentForamt(item.content) }}</small>
       </div>
       <small style="text-align: right"
         >{{ item.unick }} <br />
@@ -38,6 +38,17 @@ export default {
     },
     moveDetails(pid) {
       this.$router.push({name: "details", params: {pid}})
+    },
+    contentForamt (content) {
+      let output = "";
+
+      if (content.length > 50) {
+        output = content.slice(0, 50) + "..."
+      } else {
+        output = content;
+      }
+
+      return output;
     }
   },
   created() {

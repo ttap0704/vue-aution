@@ -103,6 +103,7 @@ export default {
               cid: data.id,
               name: data.name,
               nick: data.nick,
+              cash: data.cash
             };
 
             alert("환영합니다.");
