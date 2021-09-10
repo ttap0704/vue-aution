@@ -1,14 +1,16 @@
 <template>
-  <form id="post_write_form" @submit.prevent.stop="onSubmit">
-    <input
-      type="text"
-      name="title"
-      placeholder="제목을 입력해주세요."
-      v-model="post.title"
-    />
-    <textarea placeholder="내용을 입력해주세요." v-model="post.content" />
-    <button type="submit">작성하기</button>
-  </form>
+  <div class="contents_container">
+    <form id="post_write_form" @submit.prevent.stop="onSubmit">
+      <input
+        type="text"
+        name="title"
+        placeholder="제목을 입력해주세요."
+        v-model="post.title"
+      />
+      <textarea placeholder="내용을 입력해주세요." v-model="post.content" />
+      <button type="submit">작성하기</button>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -45,10 +47,10 @@ export default {
         .then((data) => {
           console.log(data.data.post_id);
 
-        if (data.data.post_id > 0) {
-          alert('게시글이 등록되었습니다.')
-          this.$router.push({name: "comunity"})
-        }
+          if (data.data.post_id > 0) {
+            alert("게시글이 등록되었습니다.");
+            this.$router.push({ name: "comunity" });
+          }
         })
         .catch((error) => {
           console.error(error);

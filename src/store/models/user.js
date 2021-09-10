@@ -22,12 +22,18 @@ const mutations = {
     state.name = data.name;
     state.nick = data.nick;
     state.cash = data.cash;
+  },
+  UPDATE_USER_CASH (state, cash) {
+    state.cash = cash;
   }
 }
 
 const actions = {
   setUserInfo({commit}, payload) {
     commit("SET_USER_INFO", payload)
+  },
+  updateUserCash({commit}, payload) {
+    commit("UPDATE_USER_CASH", payload)
   }
 }
 

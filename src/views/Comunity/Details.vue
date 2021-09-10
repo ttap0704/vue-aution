@@ -1,5 +1,5 @@
 <template>
-  <div id="detail_container">
+  <div class="contents_container">
     <h2 style="border-bottom: 1px solid #eee; padding: 12px !important">{{ detail.title }}</h2>
     <p style="font-size: 16px; padding: 12px;">{{ detail.content }}</p>
     <span style="float: right">{{ detail.created_at }}</span> <br>

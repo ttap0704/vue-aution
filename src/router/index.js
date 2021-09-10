@@ -14,6 +14,12 @@ const routes = [
     component: () => import("@/views/Auction/Index"),
   },
   {
+    name: "register",
+    path: "/auction/register",
+    meta: { layout: "LayoutDefault" },
+    component: () => import("@/views/Auction/Register"),
+  },
+  {
     name: "comunity",
     path: "/comunity",
     meta: { layout: "LayoutDefault" },

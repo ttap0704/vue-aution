@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="contents_container">
     <h1 class="text-center" style="padding: 40px 0">내 정보</h1>
     <div class="user_info_container">
       <h2>닉네임: {{ userInfo.nick }}</h2>
@@ -21,7 +21,7 @@ export default {
   },
   created() {
     if (this.userInfo.cid == undefined) {
-      this.$router.push({name: 'login'});
+      this.$router.push({path: '/'});
     }
   }
 };
