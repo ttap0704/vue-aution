@@ -74,18 +74,5 @@ export default {
   cursor: pointer;
 }
 
-.util_box {
-  width: 100%;
-  height: 30px;
-  margin-bottom: 20px;
-  button {
-    width: 75px;
-    height: 25px;
-    background-color: #34495e;
-    border-color: #34495e;
-    color: #fff;
-    float: right;
-    cursor: pointer;
-  }
-}
+
 </style>

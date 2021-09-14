@@ -30,7 +30,7 @@ export default {
       item: {
         title: "안녕",
         explain: "나는 조이야",
-        hashtags: ["경매", "시작", "개인", "프로젝트", "나이따"],
+        hashtags: ["경매", "시작", "개인"],
         imgUrl: "../assets/images/test.jpeg",
         imgAlt: "몰라",
       },
