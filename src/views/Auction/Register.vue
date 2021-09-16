@@ -1,11 +1,11 @@
 <template>
   <div class="contents_container">
-    <form @submit.prevent.stop="onSubmit">
+    <form @submit.prevent.stop="onSubmit" ref="auction-form">
       <div class="contents">
-        <input type="text" placeholder="경매 제목을 입력해주세요." />
+        <input type="text" placeholder="경매 제목을 입력해주세요." v-model="form.title" />
       </div>
       <div class="contents">
-        <textarea placeholder="물건에 대한 설명을 입력해주세요." />
+        <textarea placeholder="물건에 대한 설명을 입력해주세요." v-model="form.content" />
       </div>
       <div class="contents-half" style="margin-bottom: 12px">
         <div class="hashtag_box">
@@ -27,6 +27,7 @@
         <input
           id="stuff-img"
           type="file"
+          name="stuff-img"
           enctype="multipart/form-data"
           @change="handleFileChange($event)"
           multiple
@@ -35,14 +36,14 @@
       <div class="contents-half">
         <div class="half-input">
           <span>경매 시작금액</span>
-          <input type="number" placeholder="경매 시작금액" />
+          <input type="number" placeholder="경매 시작금액" v-model="form.start" />
         </div>
         <div class="half-input">
           <span>바로 낙찰금액</span>
-          <input type="number" placeholder="바로 낙찰금액" />
+          <input type="number" placeholder="바로 낙찰금액" v-model="form.direct" />
         </div>
       </div>
-      <div class="util_box" style="text-align: center;">
+      <div class="util_box" style="text-align: center">
         <button type="submit">등록하기</button>
       </div>
     </form>
@@ -61,8 +62,16 @@ export default {
       hashtag_arr: [],
       hash_focus: false,
 
+      form: {
+        title: "",
+        content: "",
+        hashtags: [],
+        img_name: [],
+        start: 0,
+        direct: 0,
+      },
+
       img_arr: [],
-      
     };
   },
   computed: {
@@ -72,18 +81,34 @@ export default {
   methods: {
     handleFileChange(e) {
       const files = e.target.files;
-      
+
       this.check_cnt++;
       if (this.check_cnt == 1) {
+        if (files.length == 0) {
+          return false;
+        }
+
+        let formData = new FormData();
+
         for (let i = 0, leng = files.length; i < leng; i++) {
           const now = new Date().getTime();
           const file_name = `${now}${this.userInfo.cid}${i}`;
-          files[i].rename = `${file_name}.${e.target.files[i].type.split("/")[1]}`
+          files[i].rename = `${file_name}.${
+            e.target.files[i].type.split("/")[1]
+          }`;
 
-          this.img_arr.push(files[i].rename)
+          this.img_arr.push(files[i].rename);
+          formData.append(`file${i}`, files[i])
         }
+        this.$axios
+          .post(`${this.$host}/utils/upload`, formData)
+          .then((data) => {
+            console.log(data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
-      console.log(files)
       if (this.check_cnt >= 2) {
         this.check_cnt = 0;
       }
@@ -92,7 +117,7 @@ export default {
       if (this.hash_focus) {
         return;
       }
-      console.log("123");
+      console.log(this.form);
     },
     addHashtag() {
       this.check_cnt++;

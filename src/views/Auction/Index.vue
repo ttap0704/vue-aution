@@ -26,16 +26,6 @@ export default {
       this.$router.push({name: 'register'})
     }
   },
-  created() {
-    this.$axios
-      .get(`${this.$host}/`)
-      .then((data) => {
-        console.log(data)
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  },
 };
 </script>
 <style lang="scss" scoped>
