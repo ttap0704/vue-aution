@@ -2,14 +2,24 @@
   <div class="contents_container">
     <form @submit.prevent.stop="onSubmit" ref="auction-form">
       <div class="contents">
-        <input type="text" placeholder="경매 제목을 입력해주세요." v-model="form.title" />
+        <input
+          type="text"
+          placeholder="경매 제목을 입력해주세요."
+          v-model="form_data.title"
+        />
       </div>
       <div class="contents">
-        <textarea placeholder="물건에 대한 설명을 입력해주세요." v-model="form.content" />
+        <textarea
+          placeholder="물건에 대한 설명을 입력해주세요."
+          v-model="form_data.content"
+        />
       </div>
       <div class="contents-half" style="margin-bottom: 12px">
         <div class="hashtag_box">
-          <span v-for="(item, index) in hashtag_arr" :key="index"
+          <span
+            v-for="(item, index) in hashtag_arr"
+            :key="index"
+            style="margin-right: 4px"
             >#{{ item }}</span
           >
         </div>
@@ -36,11 +46,19 @@
       <div class="contents-half">
         <div class="half-input">
           <span>경매 시작금액</span>
-          <input type="number" placeholder="경매 시작금액" v-model="form.start" />
+          <input
+            type="number"
+            placeholder="경매 시작금액"
+            v-model="form_data.start"
+          />
         </div>
         <div class="half-input">
           <span>바로 낙찰금액</span>
-          <input type="number" placeholder="바로 낙찰금액" v-model="form.direct" />
+          <input
+            type="number"
+            placeholder="바로 낙찰금액"
+            v-model="form_data.direct"
+          />
         </div>
       </div>
       <div class="util_box" style="text-align: center">
@@ -62,16 +80,14 @@ export default {
       hashtag_arr: [],
       hash_focus: false,
 
-      form: {
+      form_data: {
         title: "",
         content: "",
         hashtags: [],
-        img_name: [],
         start: 0,
         direct: 0,
+        images: [],
       },
-
-      img_arr: [],
     };
   },
   computed: {
@@ -87,23 +103,19 @@ export default {
         if (files.length == 0) {
           return false;
         }
-
         let formData = new FormData();
 
         for (let i = 0, leng = files.length; i < leng; i++) {
-          const now = new Date().getTime();
-          const file_name = `${now}${this.userInfo.cid}${i}`;
-          files[i].rename = `${file_name}.${
-            e.target.files[i].type.split("/")[1]
-          }`;
-
-          this.img_arr.push(files[i].rename);
-          formData.append(`file${i}`, files[i])
+          formData.append(`file${i}`, files[i]);
         }
+
         this.$axios
           .post(`${this.$host}/utils/upload`, formData)
           .then((data) => {
-            console.log(data);
+            for (let i = 0, leng = data.data.length; i < leng; i++) {
+              this.form_data.images.push(data.data[`${i}`]);
+            }
+            console.log(this.form_data.images);
           })
           .catch((error) => {
             console.error(error);
@@ -117,7 +129,17 @@ export default {
       if (this.hash_focus) {
         return;
       }
-      console.log(this.form);
+
+      const hashtag = this.hashtag_arr;
+
+      this.$axios
+        .post(`${this.$host}/auction/hashtag`, hashtag)
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
     addHashtag() {
       this.check_cnt++;
@@ -125,10 +147,10 @@ export default {
         this.hashtag_arr.push(this.hashtag.replace(" ", ""));
         this.hashtag = "";
       }
+
       if (this.check_cnt >= 2) {
         this.check_cnt = 0;
       }
-      console.log(this.hashtag);
     },
   },
   created() {
