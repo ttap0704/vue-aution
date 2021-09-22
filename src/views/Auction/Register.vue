@@ -49,7 +49,7 @@
           <input
             type="number"
             placeholder="경매 시작금액"
-            v-model="form_data.start"
+            v-model="form_data.s_price"
           />
         </div>
         <div class="half-input">
@@ -57,7 +57,7 @@
           <input
             type="number"
             placeholder="바로 낙찰금액"
-            v-model="form_data.direct"
+            v-model="form_data.d_price"
           />
         </div>
       </div>
@@ -80,13 +80,15 @@ export default {
       hashtag_arr: [],
       hash_focus: false,
 
+      images: [],
+
       form_data: {
+        host: undefined,
         title: "",
         content: "",
         hashtags: [],
-        start: 0,
-        direct: 0,
-        images: [],
+        s_price: 0,
+        d_price: 0,
       },
     };
   },
@@ -113,9 +115,8 @@ export default {
           .post(`${this.$host}/utils/upload`, formData)
           .then((data) => {
             for (let i = 0, leng = data.data.length; i < leng; i++) {
-              this.form_data.images.push(data.data[`${i}`]);
+              this.images.push(data.data[`${i}`]);
             }
-            console.log(this.form_data.images);
           })
           .catch((error) => {
             console.error(error);
@@ -135,7 +136,18 @@ export default {
       this.$axios
         .post(`${this.$host}/auction/hashtag`, hashtag)
         .then((data) => {
-          console.log(data);
+          let res_hashtags = data.data.hashtags.sort().toString();
+          this.form_data.hashtags = res_hashtags;
+          this.form_data.host = this.userInfo.cid;
+
+          this.$axios
+          .post(`${this.$host}/auction`, this.form_data)
+          .then(data => {
+            console.log(data.data)
+          })
+          .catch(error => {
+            console.error(error)
+          })
         })
         .catch((error) => {
           console.error(error);
