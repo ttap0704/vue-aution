@@ -130,7 +130,6 @@ export default {
       if (this.hash_focus) {
         return;
       }
-
       const hashtag = this.hashtag_arr;
 
       this.$axios
@@ -141,25 +140,65 @@ export default {
           this.form_data.host = this.userInfo.cid;
 
           this.$axios
-          .post(`${this.$host}/auction`, this.form_data)
-          .then(data => {
-            console.log(data.data)
-          })
-          .catch(error => {
-            console.error(error)
-          })
+            .post(`${this.$host}/auction`, this.form_data)
+            .then((data) => {
+              const auction_id = data.data.result;
+              let send_data = [];
+              let contents = {};
+
+              for (let i = 0, leng = this.images.length; i < leng; i++) {
+                contents = {
+                  file_name: this.images[i],
+                  user_id: this.userInfo.cid,
+                  auction_id: auction_id,
+                };
+
+                send_data.push(contents);
+              }
+
+              this.$axios
+                .post(`${this.$host}/auction/addimages`, send_data)
+                .then((data) => {
+                  const images_id = data.data.toString();
+                  const update_data = {
+                    files_id: images_id,
+                    auction_id: auction_id,
+                  };
+
+                  this.$axios
+                    .post(`${this.$host}/auction/updateimages`, update_data)
+                    .then((data) => {
+                      console.log(data);
+                      if (data.data.success) {
+                        alert("경매가 등록되었습니다.");
+                        this.$router.push({ path: "/" });
+                      } else {
+                        alert("경매를 다시 등록해주세요.");
+                      }
+                    })
+                    .catch((error) => {
+                      console.error(error);
+                    });
+                })
+                .catch((error) => {
+                  console.error(error);
+                });
+            })
+            .catch((error) => {
+              console.error(error);
+            });
         })
         .catch((error) => {
           console.error(error);
         });
     },
+
     addHashtag() {
       this.check_cnt++;
       if (this.hashtag_arr.length <= 5 && this.check_cnt == 1) {
         this.hashtag_arr.push(this.hashtag.replace(" ", ""));
         this.hashtag = "";
       }
-
       if (this.check_cnt >= 2) {
         this.check_cnt = 0;
       }
