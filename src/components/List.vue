@@ -2,7 +2,7 @@
   <div class="list-box b-b-e3e3e3">
     <div class="img-box">
       <img
-        src="../assets/images/test.jpeg"
+        :src="img_path"
         :alt="item.imgAlt"
         style="width: 100%; height: 100%"
       />
@@ -31,11 +31,15 @@ export default {
         title: "안녕",
         explain: "나는 조이야",
         hashtags: ["경매", "시작", "개인"],
-        imgUrl: "../assets/images/test.jpeg",
         imgAlt: "몰라",
       },
+
+      img_path: ""
     };
   },
+  created() {
+    this.img_path = `${this.$host}/assets/uploads/9e186a4c4cee26cc.jpeg`
+  }
 };
 </script>
 <style lang="scss" scoped>

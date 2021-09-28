@@ -100,31 +100,25 @@ export default {
     handleFileChange(e) {
       const files = e.target.files;
 
-      this.check_cnt++;
-      if (this.check_cnt == 1) {
-        if (files.length == 0) {
-          return false;
-        }
-        let formData = new FormData();
-
-        for (let i = 0, leng = files.length; i < leng; i++) {
-          formData.append(`file${i}`, files[i]);
-        }
-
-        this.$axios
-          .post(`${this.$host}/utils/upload`, formData)
-          .then((data) => {
-            for (let i = 0, leng = data.data.length; i < leng; i++) {
-              this.images.push(data.data[`${i}`]);
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+      if (files.length == 0) {
+        return false;
       }
-      if (this.check_cnt >= 2) {
-        this.check_cnt = 0;
+      let formData = new FormData();
+
+      for (let i = 0, leng = files.length; i < leng; i++) {
+        formData.append(`file${i}`, files[i]);
       }
+
+      this.$axios
+        .post(`${this.$host}/utils/upload`, formData)
+        .then((data) => {
+          for (let i = 0, leng = data.data.length; i < leng; i++) {
+            this.images.push(data.data[`${i}`]);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
     onSubmit() {
       if (this.hash_focus) {
