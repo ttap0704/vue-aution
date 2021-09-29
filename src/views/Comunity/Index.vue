@@ -37,7 +37,7 @@ export default {
       }
     },
     moveDetails(pid) {
-      this.$router.push({name: "details", params: {pid}})
+      this.$router.push({name: "comunity-details", params: {pid}})
     },
     contentForamt (content) {
       let output = "";

@@ -20,6 +20,12 @@ const routes = [
     component: () => import("@/views/Auction/Register"),
   },
   {
+    name: "auction-details",
+    path: "/auction/details/:aid",
+    meta: { layout: "LayoutDefault" },
+    component: () => import("@/views/Auction/Details"),
+  },
+  {
     name: "comunity",
     path: "/comunity",
     meta: { layout: "LayoutDefault" },
@@ -32,7 +38,7 @@ const routes = [
     component: () => import("@/views/Comunity/Write"),
   },
   {
-    name: "details",
+    name: "comunity-details",
     path: "/comunity/details/:pid",
     meta: { layout: "LayoutDefault" },
     component: () => import("@/views/Comunity/Details"),

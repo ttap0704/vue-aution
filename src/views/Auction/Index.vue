@@ -7,19 +7,15 @@
       class="list-box b-b-e3e3e3"
       v-for="(item, index) in items"
       :key="index"
+      @click="moveDetails(index)"
     >
-      <div class="img-box" @click="increaseIdx">
-        <img
-          v-for="(path, img_idx) in item.images"
-          :src="setImgPath(path)"
-          :alt="item.imgAlt"
-          :key="img_idx"
-        />
+      <div class="img-box" @click="increaseIdx(item)">
+        <img :src="setImgPath(item.images[item.cur_img])" :alt="item.imgAlt" />
       </div>
-      <div class="text-box b-e3e3e3">
+      <div class="text-box">
         <h3>{{ item.title }}</h3>
         <p>{{ item.content }}</p>
-        <small>남은시간 : {{ setTimer(item.created_at) }}</small>
+        <small>남은시간 : {{ f_time_arr[index] }}</small>
         <div class="hashtag-box">
           <span
             v-for="(hashtag, index) in item.hashtags"
@@ -42,6 +38,7 @@ export default {
 
       timer: undefined,
       time_arr: [],
+      f_time_arr: [],
     };
   },
   computed: {
@@ -55,17 +52,36 @@ export default {
       }
       this.$router.push({ name: "register" });
     },
+    increaseIdx(item) {
+      const max = item.images.length - 1;
+
+      if (item.cur_img == max) {
+        item.cur_img = 0;
+        return;
+      }
+
+      item.cur_img++;
+    },
     setImgPath(path) {
       return `${this.$host}/assets/uploads/${path}`;
     },
-    setTimer(time) {
-      let remain_time =
-        new Date(time).setDate(new Date(time).getDate() + 1) - new Date();
-      let hour = parseInt(remain_time / 1000 / 3600);
-      let second = parseInt((remain_time / 1000 / 60) % 60);
+    setTimer() {
+      for (let i = 0, leng = this.time_arr.length; i < leng; i++) {
+        let time = this.time_arr[i];
+        let remain_time =
+          new Date(time).setDate(new Date(time).getDate() + 1) - new Date();
+        let hour = parseInt(remain_time / 1000 / 3600);
+        let second = parseInt((remain_time / 1000 / 60) % 60);
 
-      return `${hour}시간 ${second}분`;
+        this.f_time_arr[i] = `${hour}시간 ${second}분`;
+      }
     },
+    moveDetails(idx) {
+      const aid = this.items[idx].id;
+      const auction = this.items[idx];
+      console.log(auction)
+      this.$router.push({name: "auction-details", params: {aid, auction}})
+    }
   },
   created() {
     this.$axios
@@ -73,12 +89,20 @@ export default {
       .then((data) => {
         for (let i = 0, leng = data.data.length; i < leng; i++) {
           this.items.push(data.data[i]);
-          this.setTimer(data.data[i].created_at, i);
+          this.items[i].cur_img = 0;
+          this.time_arr.push(data.data[i].created_at);
+        }
+
+        if (this.time_arr.length > 0) {
+          this.timer = setInterval(this.setTimer, 1000);
         }
       })
       .catch((error) => {
         console.error(error);
       });
+  },
+  beforeUnmount() {
+    this.timer = undefined;
   },
 };
 </script>
@@ -89,11 +113,12 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-around;
+  cursor: pointer;
 }
 .img-box {
   width: 100px;
   height: 100px;
-  border: 1px solid #666;
+  border: 1px solid #e3e3e3;
   position: relative;
   img {
     width: 100%;
