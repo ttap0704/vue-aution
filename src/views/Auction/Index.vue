@@ -94,6 +94,7 @@ export default {
         }
 
         if (this.time_arr.length > 0) {
+          this.setTimer();
           this.timer = setInterval(this.setTimer, 1000);
         }
       })
