@@ -7,6 +7,11 @@
       <span>닉네임 : {{ auction.unick }}</span> <br />
       <span>남은 시간 : {{ timer }}</span>
     </div>
+    <div class="content_box">
+      <div>
+        {{ auction.content }}
+      </div>
+    </div>
     <div class="price_box">
       <div>
         <h3>현재 가격</h3>
@@ -18,14 +23,19 @@
       </div>
     </div>
     <div class="bid_box">
-      <input type="number" placeholder="입찰가격을 입력해주세요" />
-      <button>입찰</button>
+      <input
+        type="number"
+        placeholder="입찰가격을 입력해주세요"
+        v-model="bid_price"
+      />
+      <button @click="bidAuction">입찰</button>
     </div>
     <button class="direct_btn">바로구매</button>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -37,9 +47,13 @@ export default {
 
       timer: "",
       timer_interval: undefined,
+
+      bid_price: 0,
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters("User", ["userInfo"]),
+  },
   methods: {
     setImgPath(path) {
       this.cur_img = `${this.$host}/assets/uploads/${path}`;
@@ -67,9 +81,43 @@ export default {
 
       this.timer = `${hour}시간 ${second}분`;
     },
+    bidAuction() {
+      const price = this.bid_price;
+      const login_user = this.userInfo.cid;
+
+      if (price < this.auction.c_price) {
+        alert("현재 가격보다 높은 가격을 입력해주세요.");
+        return;
+      } else if (price > this.auction.d_price) {
+        alert("바로구매 가격보다 낮은 가격을 입력해주세요.");
+        return;
+      }
+
+      if (login_user == this.auction.uid) {
+        alert("본인이 등록한 상품은 입찰할 수 없습니다.");
+        return;
+      } else if (login_user == undefined) {
+        alert("로그인 해주세요.");
+        return;
+      }
+
+      const data = {
+        uid: login_user,
+        cash: price,
+        aid: this.auction.id,
+      };
+
+      this.$axios
+        .post(`${this.$host}/auction/bid`, data)
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
   created() {
-    console.log(this.moneyFormat());
     this.$axios
       .get(`${this.$host}/auction/detail/${this.$route.params.aid}`)
       .then((data) => {
@@ -92,9 +140,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.content_box {
+  width: 100%;
+  height: 200px;
+  border: 1px solid #e3e3e3;
+  border-radius: 6px;
+  padding: 12px;
+  overflow: auto;
+  margin-bottom: 12px;
+}
 .img_box {
-  width: 250px;
-  height: 250px;
+  width: 200px;
+  height: 200px;
   border: 1px solid #e3e3e3;
   margin: 0 auto 30px;
 }
@@ -143,7 +200,7 @@ export default {
 
 .direct_btn {
   width: 100%;
-  margin-top: 8px
+  margin-top: 8px;
 }
 
 button {
