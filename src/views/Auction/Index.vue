@@ -10,7 +10,10 @@
       @click="moveDetails(index)"
     >
       <div class="img-box" @click="increaseIdx(item)">
-        <img :src="setImgPath(item.images[item.cur_img])" :alt="item.imgAlt" />
+          <img
+            :src="setImgPath(item.images[item.cur_img])"
+            :alt="item.imgAlt"
+          />
       </div>
       <div class="text-box">
         <h3>{{ item.title }}</h3>
@@ -79,9 +82,9 @@ export default {
     moveDetails(idx) {
       const aid = this.items[idx].id;
       const auction = this.items[idx];
-      console.log(auction)
-      this.$router.push({name: "auction-details", params: {aid, auction}})
-    }
+      console.log(auction);
+      this.$router.push({ name: "auction-details", params: { aid, auction } });
+    },
   },
   created() {
     this.$axios

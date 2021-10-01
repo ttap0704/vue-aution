@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -55,6 +55,7 @@ export default {
     ...mapGetters("User", ["userInfo"]),
   },
   methods: {
+    ...mapActions("User", ["updateUserCash"]),
     setImgPath(path) {
       this.cur_img = `${this.$host}/assets/uploads/${path}`;
     },
@@ -85,19 +86,19 @@ export default {
       const price = this.bid_price;
       const login_user = this.userInfo.cid;
 
-      if (price < this.auction.c_price) {
-        alert("현재 가격보다 높은 가격을 입력해주세요.");
-        return;
-      } else if (price > this.auction.d_price) {
-        alert("바로구매 가격보다 낮은 가격을 입력해주세요.");
-        return;
-      }
-
       if (login_user == this.auction.uid) {
         alert("본인이 등록한 상품은 입찰할 수 없습니다.");
         return;
       } else if (login_user == undefined) {
         alert("로그인 해주세요.");
+        return;
+      }
+
+      if (price < this.auction.c_price) {
+        alert("현재 가격보다 높은 가격을 입력해주세요.");
+        return;
+      } else if (price > this.auction.d_price) {
+        alert("바로구매 가격보다 낮은 가격을 입력해주세요.");
         return;
       }
 
@@ -110,12 +111,37 @@ export default {
       this.$axios
         .post(`${this.$host}/auction/bid`, data)
         .then((data) => {
-          console.log(data);
+          const res = data.data.result.success;
+          if (res) {
+            alert("입찰에 성공하였습니다.");
+            this.updateUserCash(data.data.result.remain_cash.cash);
+          }
         })
         .catch((error) => {
           console.log(error);
         });
     },
+    dircertBuy() {
+      const login_user = this.userInfo.cid;
+      const user_cash = this.userInfo.cash;
+
+      if (login_user == this.auction.uid) {
+        alert("본인이 등록한 상품은 구매할 수 없습니다.");
+        return;
+      } else if (login_user == undefined) {
+        alert("로그인 해주세요.");
+        return;
+      }
+
+      if (user_cash < this.auction.d_price) {
+        alert("잔여 캐쉬가 부족합니다.");
+        return;
+      } 
+
+      // const data = {
+
+      // }
+    }
   },
   created() {
     this.$axios
