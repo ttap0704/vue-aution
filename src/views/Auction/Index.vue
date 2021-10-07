@@ -1,6 +1,12 @@
 <template>
   <div class="contents_container">
     <div class="util_box">
+      <input
+        type="text"
+        placeholder="해시태그를 입력해주세요."
+        @keydown.enter="searchHashtag"
+        v-model="search_value"
+      />
       <button @click="registerStuff">상품 등록</button>
     </div>
     <div
@@ -10,10 +16,7 @@
       @click="moveDetails(index)"
     >
       <div class="img-box" @click="increaseIdx(item)">
-          <img
-            :src="setImgPath(item.images[item.cur_img])"
-            :alt="item.imgAlt"
-          />
+        <img :src="setImgPath(item.images[item.cur_img])" :alt="item.imgAlt" />
       </div>
       <div class="text-box">
         <h3>{{ item.title }}</h3>
@@ -42,6 +45,8 @@ export default {
       timer: undefined,
       time_arr: [],
       f_time_arr: [],
+
+      search_value: "",
     };
   },
   computed: {
@@ -84,6 +89,14 @@ export default {
       const auction = this.items[idx];
       console.log(auction);
       this.$router.push({ name: "auction-details", params: { aid, auction } });
+    },
+    searchHashtag() {
+      const hashtag = this.search_value;
+
+      if (hashtag) {
+        console.log('gi')
+      }
+      this.search_value = "";
     },
   },
   created() {

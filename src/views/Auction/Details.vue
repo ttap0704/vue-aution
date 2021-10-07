@@ -136,12 +136,12 @@ export default {
       if (user_cash < this.auction.d_price) {
         alert("잔여 캐쉬가 부족합니다.");
         return;
-      } 
+      }
 
       // const data = {
 
       // }
-    }
+    },
   },
   created() {
     this.$axios
