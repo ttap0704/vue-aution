@@ -5,7 +5,8 @@
     </div>
     <div class="host_info">
       <span>닉네임 : {{ auction.unick }}</span> <br />
-      <span>남은 시간 : {{ timer }}</span>
+      <span v-if="auction.done == 0">남은 시간 : {{ timer }}</span>
+      <span v-else>종료된 경매입니다.</span>
     </div>
     <div class="content_box">
       <div>
@@ -150,9 +151,12 @@ export default {
         this.auction = data.data;
         this.auction.cur_img = 0;
         this.setImgPath(this.auction.images[this.cur_img_idx]);
-        this.setTimer();
         this.img_interval = setInterval(this.increaseIdx, 2000);
         this.timer_interval = setInterval(this.setTimer, 1000);
+
+        if (this.auction.done == 0) {
+          this.setTimer();
+        }
       })
       .catch((error) => {
         console.error(error);

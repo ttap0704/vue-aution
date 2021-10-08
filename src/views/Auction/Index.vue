@@ -15,7 +15,7 @@
       :key="index"
       @click="moveDetails(index)"
     >
-      <div class="img-box" @click="increaseIdx(item)">
+      <div class="img-box" @click.prevent.stop="increaseIdx(item)">
         <img :src="setImgPath(item.images[item.cur_img])" :alt="item.imgAlt" />
       </div>
       <div class="text-box">
@@ -81,7 +81,11 @@ export default {
         let hour = parseInt(remain_time / 1000 / 3600);
         let second = parseInt((remain_time / 1000 / 60) % 60);
 
-        this.f_time_arr[i] = `${hour}시간 ${second}분`;
+        if (this.items[i].done == 0) {
+          this.f_time_arr[i] = `${hour}시간 ${second}분`;
+        } else {
+          this.f_time_arr[i] = `종료된 경매입니다.`;
+        }
       }
     },
     moveDetails(idx) {
@@ -94,25 +98,36 @@ export default {
       const hashtag = this.search_value;
 
       if (hashtag) {
-        console.log('gi')
+        this.$axios
+          .get(`${this.$host}/auction/getauctionlist?hashtag=${hashtag}`)
+          .then((data) => {
+            this.setList(data);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
       this.search_value = "";
+    },
+    setList(data) {
+      this.items = [];
+      for (let i = 0, leng = data.data.length; i < leng; i++) {
+        this.items.push(data.data[i]);
+        this.items[i].cur_img = 0;
+        this.time_arr.push(data.data[i].created_at);
+      }
+
+      if (this.time_arr.length > 0) {
+        this.setTimer();
+        this.timer = setInterval(this.setTimer, 1000);
+      }
     },
   },
   created() {
     this.$axios
       .get(`${this.$host}/auction/getauctionlist`)
       .then((data) => {
-        for (let i = 0, leng = data.data.length; i < leng; i++) {
-          this.items.push(data.data[i]);
-          this.items[i].cur_img = 0;
-          this.time_arr.push(data.data[i].created_at);
-        }
-
-        if (this.time_arr.length > 0) {
-          this.setTimer();
-          this.timer = setInterval(this.setTimer, 1000);
-        }
+        this.setList(data);
       })
       .catch((error) => {
         console.error(error);
