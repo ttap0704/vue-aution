@@ -16,16 +16,21 @@
     </div>
     <h2 style="margin-top: 12px">입찰내역</h2>
     <div class="content_box">
-      <div class="history_row" style="margin-bottom: 8px">
-        <span>입찰가</span>
-        <span>입찰자</span>
-      </div>
-      <div v-for="(item, index) in auction.history" :key="index">
-        <div class="history_row">
-          <span>{{ item.price }}</span>
-          <span>{{ item.unick }}</span>
+      <template v-if="auction.history[0] != null">
+        <div class="history_row" style="margin-bottom: 8px">
+          <span>입찰가</span>
+          <span>입찰자</span>
         </div>
-      </div>
+        <div v-for="(item, index) in auction.history" :key="index">
+          <div class="history_row">
+            <span>{{ item.price }}</span>
+            <span>{{ item.unick }}</span>
+          </div>
+        </div>
+      </template>
+      <template v-else>
+        <span>입찰 내역이 없습니다.</span>
+      </template>
     </div>
     <div class="price_box">
       <div>
@@ -43,7 +48,7 @@
         placeholder="입찰가격을 입력해주세요"
         v-model="bid_price"
       />
-      <button @click="bidAuction('c')">입찰</button>
+      <button @click="bidAuction('b')">입찰</button>
     </div>
     <button @click="bidAuction('d')" class="direct_btn">바로구매</button>
   </div>
@@ -101,7 +106,7 @@ export default {
       const login_user = this.userInfo.cid;
 
       let price = 0;
-      if (type == "c") {
+      if (type == "b") {
         price = this.bid_price;
       } else {
         price = this.auction.d_price;
@@ -124,10 +129,9 @@ export default {
       }
 
       if (this.auction.done == 1) {
-        alert('종료된 경매입니다.')
+        alert("종료된 경매입니다.");
         return;
       }
-
 
       const data = {
         uid: login_user,
@@ -148,27 +152,6 @@ export default {
           console.log(error);
         });
     },
-    dircertBuy() {
-      const login_user = this.userInfo.cid;
-      const user_cash = this.userInfo.cash;
-
-      if (login_user == this.auction.uid) {
-        alert("본인이 등록한 상품은 구매할 수 없습니다.");
-        return;
-      } else if (login_user == undefined) {
-        alert("로그인 해주세요.");
-        return;
-      }
-
-      if (user_cash < this.auction.d_price) {
-        alert("잔여 캐쉬가 부족합니다.");
-        return;
-      }
-
-      // const data = {
-
-      // }
-    },
   },
   created() {
     this.$axios
@@ -180,9 +163,7 @@ export default {
         this.img_interval = setInterval(this.increaseIdx, 2000);
         this.timer_interval = setInterval(this.setTimer, 1000);
 
-        if (this.auction.done == 0) {
-          this.setTimer();
-        }
+        this.setTimer();
       })
       .catch((error) => {
         console.error(error);
