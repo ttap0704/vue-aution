@@ -8,9 +8,23 @@
       <span v-if="auction.done == 0">남은 시간 : {{ timer }}</span>
       <span v-else>종료된 경매입니다.</span>
     </div>
+    <h2 style="margin-top: 12px">경매설명</h2>
     <div class="content_box">
       <div>
         {{ auction.content }}
+      </div>
+    </div>
+    <h2 style="margin-top: 12px">입찰내역</h2>
+    <div class="content_box">
+      <div class="history_row" style="margin-bottom: 8px">
+        <span>입찰가</span>
+        <span>입찰자</span>
+      </div>
+      <div v-for="(item, index) in auction.history" :key="index">
+        <div class="history_row">
+          <span>{{ item.price }}</span>
+          <span>{{ item.unick }}</span>
+        </div>
       </div>
     </div>
     <div class="price_box">
@@ -29,9 +43,9 @@
         placeholder="입찰가격을 입력해주세요"
         v-model="bid_price"
       />
-      <button @click="bidAuction">입찰</button>
+      <button @click="bidAuction('c')">입찰</button>
     </div>
-    <button class="direct_btn">바로구매</button>
+    <button @click="bidAuction('d')" class="direct_btn">바로구매</button>
   </div>
 </template>
 
@@ -83,9 +97,15 @@ export default {
 
       this.timer = `${hour}시간 ${second}분`;
     },
-    bidAuction() {
-      const price = this.bid_price;
+    bidAuction(type) {
       const login_user = this.userInfo.cid;
+
+      let price = 0;
+      if (type == "c") {
+        price = this.bid_price;
+      } else {
+        price = this.auction.d_price;
+      }
 
       if (login_user == this.auction.uid) {
         alert("본인이 등록한 상품은 입찰할 수 없습니다.");
@@ -102,6 +122,12 @@ export default {
         alert("바로구매 가격보다 낮은 가격을 입력해주세요.");
         return;
       }
+
+      if (this.auction.done == 1) {
+        alert('종료된 경매입니다.')
+        return;
+      }
+
 
       const data = {
         uid: login_user,
@@ -178,6 +204,17 @@ export default {
   padding: 12px;
   overflow: auto;
   margin-bottom: 12px;
+  .history_row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    span {
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 }
 .img_box {
   width: 200px;
